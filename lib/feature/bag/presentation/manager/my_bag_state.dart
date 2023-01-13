@@ -1,26 +1,48 @@
 part of 'my_bag_bloc.dart';
 
-abstract class MyBagState extends Equatable {
-  const MyBagState();
-}
+class MyBagState extends Equatable {
+  final List<MyBagEntity> bagItems;
+  final RequestState bagState;
+  final String bagMessage;
+  final int index;
+  final bool isRebuildListState;
+  final bool isBagItemState;
 
-class MyBagInitial extends MyBagState {
-  final List<MyBagItemEntity> items = List.generate(20, (index) =>
-      MyBagItemEntity(
-          id: 'id',
-          name: 'name',
-          price: 1000 * (index + 1),
-          imageUrl: 'assets/images/sneaker_0${index % 4.toInt()}.png',
-          count: 40));
+  const MyBagState({
+    this.bagItems = const [],
+    this.bagState = RequestState.loading,
+    this.bagMessage = "",
+    this.index = 0,
+    this.isRebuildListState = false,
+    this.isBagItemState = false,
+
+  });
+
+  MyBagState copyWith({
+    List<MyBagEntity>? bagItems,
+    RequestState? bagState,
+    String? bagMessage,
+    int? index,
+    bool? isRebuildListState,
+    bool? isBagItemState,
+  }) {
+    return MyBagState(
+      bagItems: bagItems ?? this.bagItems,
+      bagState: bagState ?? this.bagState,
+      bagMessage: bagMessage ?? this.bagMessage,
+      index: index ?? this.index,
+      isRebuildListState: isRebuildListState ?? this.isRebuildListState,
+      isBagItemState: isBagItemState ?? this.isBagItemState,
+    );
+  }
+
   @override
-  List<Object> get props => [items];
-}
-
-class RebuildListState extends MyBagState {
-  final String tag;
-
-  const RebuildListState(this.tag);
-
-  @override
-  List<Object?> get props => [tag];
+  List<Object> get props => [
+        bagItems,
+        index,
+        bagState,
+        bagMessage,
+        isRebuildListState,
+        isBagItemState,
+      ];
 }

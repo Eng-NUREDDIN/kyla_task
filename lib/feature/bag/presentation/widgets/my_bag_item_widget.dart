@@ -1,11 +1,12 @@
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kyla_task/core/extensions/extensions.dart';
-import 'package:kyla_task/feature/bag/domain/entities/my_bag_item_entity.dart';
+import 'package:kyla_task/feature/bag/domain/entities/my_bag_entity.dart';
+
 
 
 class MyBagItemWidget extends StatefulWidget {
-  final MyBagItemEntity entity;
+  final MyBagEntity entity;
   final Function()? onAddPressed;
   final Function()? onRemovePressed;
 
@@ -76,7 +77,7 @@ class _MyBagItemWidgetState extends State<MyBagItemWidget>
                   )),
                   alignment: Alignment.center,
                   child: Image.asset(
-                    widget.entity.imageUrl,
+                    widget.entity.image,
                     width: context.getWidth() * 0.30,
                   )),
             )
@@ -124,7 +125,7 @@ class _MyBagItemWidgetState extends State<MyBagItemWidget>
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 12.0),
                             child: Text(
-                              "${widget.entity.count}",
+                              "${widget.entity.quantity}",
                               style: const TextStyle(fontSize: 14),
                             ),
                           ),

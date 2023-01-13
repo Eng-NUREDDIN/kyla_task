@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kyla_task/core/service/service_locator.dart';
 import 'package:kyla_task/feature/bag/presentation/manager/my_bag_bloc.dart';
 import 'package:kyla_task/feature/bag/presentation/widgets/my_bags_page_footer.dart';
 
@@ -16,9 +17,8 @@ class MyBagPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => MyBagBloc(),
+      create: (context) => MyBagBloc(sl())..add(BagItemEvent()),
       child: Scaffold(
-
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -39,10 +39,7 @@ class MyBagPage extends StatelessWidget {
                   ),),
                   BlocBuilder<MyBagBloc, MyBagState>(
                     builder: (context, state) {
-                      return Text("total ${BlocProvider
-                          .of<MyBagBloc>(context)
-                          .items
-                          .length} items");
+                      return Text("total ${state.bagItems.length} items");
                     },
                   ),
                 ],
@@ -55,76 +52,45 @@ class MyBagPage extends StatelessWidget {
                 child:
                 BlocBuilder<MyBagBloc, MyBagState>(
                   builder: (context, state) {
-                    if (state is RebuildListState) {
-                      return AnimatedList(
-                        key: _key,
-                        initialItemCount: BlocProvider
-                            .of<MyBagBloc>(context)
-                            .items
-                            .length,
+
+                    return state.bagItems.isEmpty? const Center(child: Text("No Item"),) : AnimatedList(
+                      key: _key,
+                        initialItemCount: state.bagItems.length,
                         controller: _animatedListController,
-                        itemBuilder: (c, index, animation) =>
-                            ScaleTransition(
+                        itemBuilder: (c, index, animation) {
+
+                          return ScaleTransition(
                               scale: animation,
-                              child: MyBagItemWidget(entity: BlocProvider
-                                  .of<MyBagBloc>(context)
-                                  .items[index],
+                              child: MyBagItemWidget(entity: state.bagItems[index],
                                 onAddPressed: () {
                                   BlocProvider
                                       .of<MyBagBloc>(context)
-                                      .add(AddOneMoreItemEvent(index));
+                                      .add(AddOneMoreItemEvent(index, state.bagItems[index].quantity));
                                 },
                                 onRemovePressed: () {
-                                  if (BlocProvider
-                                      .of<MyBagBloc>(context)
-                                      .items[index].count <= 1) {
-                                    _key.currentState!.removeItem(
-                                        index, (context, animation) =>
-                                        ScaleTransition(
-                                            alignment: const Alignment(
-                                                -0.5, -0.2),
-                                            scale: animation,
-                                            child: MyBagItemWidget(
-                                              entity: BlocProvider
-                                                  .of<MyBagBloc>(context)
-                                                  .items[index],)),
-                                        duration: const Duration(
-                                            milliseconds: 800));
-                                  }
+
+                                if( state.bagItems[index].quantity-1<=0){
+
+                                  var tempEntity=state.bagItems[index];
+                                  _key.currentState!.removeItem(
+                                      index, (context, animation) =>
+                                      ScaleTransition(
+                                          alignment: const Alignment(
+                                              -0.5, -0.2),
+                                          scale: animation,
+                                          child: MyBagItemWidget(
+                                            entity: tempEntity)),
+                                      duration: const Duration(
+                                          milliseconds: 800));
+                                }
                                   BlocProvider
                                       .of<MyBagBloc>(context)
-                                      .add(RemoveOneItemEvent(index));
+                                      .add(RemoveOneItemEvent(index, state.bagItems[index].quantity));
                                 },),
-                            ),
+                            );
+                        },
                       );
-                    } else if (state is MyBagInitial) {
-                      return AnimatedList(
-                        initialItemCount: BlocProvider
-                            .of<MyBagBloc>(context)
-                            .items
-                            .length,
-                        controller: _animatedListController,
-                        itemBuilder: (c, index, animation) =>
-                            ScaleTransition(
-                              scale: animation,
-                              child: MyBagItemWidget(entity: BlocProvider
-                                  .of<MyBagBloc>(context)
-                                  .items[index],
-                                onAddPressed: () {
-                                  BlocProvider
-                                      .of<MyBagBloc>(context)
-                                      .add(AddOneMoreItemEvent(index));
-                                },
-                                onRemovePressed: () {
-                                  BlocProvider
-                                      .of<MyBagBloc>(context)
-                                      .add(RemoveOneItemEvent(index));
-                                },),
-                            ),
-                      );
-                    } else {
-                      return Container();
-                    }
+
                   },
                 )),
             const MyBagPageFooter()

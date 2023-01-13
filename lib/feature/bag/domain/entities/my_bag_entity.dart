@@ -1,14 +1,14 @@
 import 'package:equatable/equatable.dart';
 
 class MyBagEntity extends Equatable {
-  final String id;
+  final int id;
   final String name;
   final String image;
   final String price;
-  final int quantity;
+   int quantity;
   final String total;
 
-  const MyBagEntity({
+   MyBagEntity({
     required this.id,
     required this.name,
     required this.image,

@@ -6,7 +6,7 @@ import 'bag_data_source_methods.dart';
 class BagDataSourceData extends BagDataSourceMethod{
   @override
   List<MyBagModel> getBagData() {
-    final response = MockedData().brandData;
+    final response = MockedData().bagData;
     return List<MyBagModel>.from(
       (response["data"] as List).map((element) => MyBagModel.fromJson(element)),
     );

@@ -2,24 +2,33 @@ part of 'my_bag_bloc.dart';
 
 abstract class MyBagEvent extends Equatable {
   const MyBagEvent();
-}
 
-class AddOneMoreItemEvent extends MyBagEvent{
-
-  final int itemIndex ;
-
-  const AddOneMoreItemEvent(this.itemIndex);
   @override
-  List<Object?> get props =>[itemIndex];
-
+  List<Object> get props => [];
 }
 
-class RemoveOneItemEvent extends MyBagEvent{
+// class AddOneMoreItemEvent extends MyBagEvent {
+//
+//   final int itemIndex;
+//
+//   const AddOneMoreItemEvent(this.itemIndex);
+//
+//   @override
+//   List<Object?> get props => [itemIndex];
+//
+// }
+class BagEvent extends MyBagEvent {}
+class BagItemEvent extends MyBagEvent {}
+class RemoveOneItemEvent extends MyBagEvent {
   final int itemIndex;
+  int quantity;
 
-  const RemoveOneItemEvent(this.itemIndex);
-  @override
-  List<Object?> get props =>[itemIndex];
+   RemoveOneItemEvent(this.itemIndex, this.quantity);
+}
+class AddOneMoreItemEvent extends MyBagEvent {
+  final int itemIndex;
+  int quantity;
 
+   AddOneMoreItemEvent(this.itemIndex, this.quantity);
 }
 

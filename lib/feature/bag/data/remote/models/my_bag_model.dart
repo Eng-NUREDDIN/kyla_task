@@ -2,7 +2,7 @@ import 'package:kyla_task/feature/bag/domain/entities/my_bag_entity.dart';
 
 class MyBagModel extends MyBagEntity{
   MyBagModel({
-    required String id,
+    required int id,
     required String name,
     required String image,
     required String price,
